@@ -11,6 +11,7 @@ export default function (queryPoints: QueryPoint[]): MapLayer {
     return {
         interactiveLayerIds: [],
         onClick: () => {},
+        onHover: () => {},
         layer: <>{...createQueryPointMarkers(queryPoints)}</>,
     }
 }

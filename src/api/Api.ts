@@ -38,7 +38,7 @@ export class ApiImpl implements Api {
     private readonly apiKey: string
     private readonly apiAddress: string
 
-    constructor(apiKey = ghKey, apiAddress = 'https://graphhopper.com/api/1/') {
+    constructor(apiKey = ghKey, apiAddress = 'http://localhost:8989/') {
         this.apiKey = apiKey
         this.apiAddress = apiAddress
     }
@@ -141,7 +141,7 @@ export class ApiImpl implements Api {
             optimize: 'false',
             points_encoded: true,
             snap_preventions: ['ferry'],
-            details: ['road_class', 'road_environment', 'surface', 'max_speed', 'average_speed'],
+            details: ['road_class', 'road_environment', 'max_speed', 'average_speed'],
         }
 
         if (args.maxAlternativeRoutes > 1) {

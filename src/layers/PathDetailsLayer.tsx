@@ -11,6 +11,7 @@ export default function (pathDetails: PathDetailsStoreState): MapLayer {
     return {
         interactiveLayerIds: [],
         onClick: () => {},
+        onHover: () => {},
         layer: (
             <>
                 {pathDetails.pathDetailsPoint && createPathDetailMarker(pathDetails.pathDetailsPoint)}

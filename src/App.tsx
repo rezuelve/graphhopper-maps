@@ -27,6 +27,7 @@ import { ViewportStoreState } from '@/stores/ViewportStore'
 import createPathDetailsLayer from '@/layers/PathDetailsLayer'
 import createQueryPointsLayer from '@/layers/QueryPointsLayer'
 import createPathsLayer from '@/layers/PathsLayer'
+import createRoutingGraphLayer from '@/layers/RoutingGraphLayer'
 import { MapLayer } from '@/layers/MapLayer'
 
 export default function App() {
@@ -69,8 +70,10 @@ export default function App() {
     const isSmallScreen = useMediaQuery({ query: '(max-width: 44rem)' })
 
     const mapLayers: MapLayer[] = [
-        createQueryPointsLayer(query.queryPoints),
+        // layers are stacked from bottom to top in the order of this list
+        createRoutingGraphLayer(),
         createPathsLayer(route.selectedPath, route.routingResult.paths),
+        createQueryPointsLayer(query.queryPoints),
     ]
     if (isSmallScreen) mapLayers.push(createPathDetailsLayer(pathDetails))
 

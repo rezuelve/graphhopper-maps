@@ -28,6 +28,7 @@ export default function (selectedPath: Path, paths: Path[]): MapLayer {
                 Dispatcher.dispatch(new SetSelectedPath(path!.path))
             }
         },
+        onHover: () => {},
         layer: (
             <>
                 {createUnselectedPaths(currentPaths)}

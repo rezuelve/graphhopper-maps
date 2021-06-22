@@ -4,4 +4,5 @@ export interface MapLayer {
     layer: ReactElement
     interactiveLayerIds: string[]
     onClick: (feature: any) => void
+    onHover: (feature: any) => void
 }
