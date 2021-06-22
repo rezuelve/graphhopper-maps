@@ -106,7 +106,13 @@ export class SelectMapStyle implements Action {
     }
 }
 
-export class MapIsLoaded implements Action {}
+export class MapIsLoaded implements Action {
+    readonly firstSymbolLayerId?: string
+
+    constructor(firstSymbolLayerId: string | undefined){
+        this.firstSymbolLayerId = firstSymbolLayerId
+    }
+}
 
 export class SetViewport implements Action {
     readonly viewport: ViewportStoreState

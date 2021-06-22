@@ -13,6 +13,7 @@ export interface MapOptionsStoreState {
     styleOptions: StyleOption[]
     selectedStyle: StyleOption
     isMapLoaded: boolean
+    firstSymbolLayerId?: string
 }
 
 export interface StyleOption {
@@ -205,11 +206,16 @@ export default class MapOptionsStore extends Store<MapOptionsStoreState> {
             return {
                 ...state,
                 selectedStyle: action.styleOption,
+                // todonow: when we change the map style we need to obtain the first symbol layer again, but how?
+                // this might be a bit complicated because our app does not really control all the layers of the 'background'
+                // style
+                firstSymbolLayerId: undefined
             }
         } else if (action instanceof MapIsLoaded) {
             return {
                 ...state,
                 isMapLoaded: true,
+                firstSymbolLayerId: action.firstSymbolLayerId
             }
         }
         return state
