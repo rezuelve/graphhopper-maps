@@ -71,7 +71,7 @@ export default function App() {
 
     const mapLayers: MapLayer[] = [
         // layers are stacked from bottom to top in the order of this list
-        createRoutingGraphLayer(),
+        createRoutingGraphLayer(mapOptions.routingGraphEnabled),
         createPathsLayer(route.selectedPath, route.routingResult.paths),
         createQueryPointsLayer(query.queryPoints),
     ]

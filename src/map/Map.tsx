@@ -45,9 +45,9 @@ export default function ({ viewport, mapStyle, queryPoints, mapLayers }: MapProp
             // todo: minor glitch: when we hover the map before the path got loaded we get an error in the console
             interactiveLayerIds={interactiveLayerIds}
             onHover={e => {
-                console.log(e);
                 const feature = e.features?.[0]
-                if (feature) mapLayers.forEach(l => l.onHover({feature, lngLat: e.lngLat}))
+                if (feature) mapLayers.forEach(l => l.onHover({ feature, lngLat: e.lngLat }))
+                else mapLayers.forEach(l => l.onHover(null))
             }}
             onClick={e => {
                 const feature = e.features?.[0]

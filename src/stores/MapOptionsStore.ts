@@ -1,6 +1,6 @@
 import Store from '@/stores/Store'
 import { Action } from '@/stores/Dispatcher'
-import { MapIsLoaded, SelectMapStyle } from '@/actions/Actions'
+import { MapIsLoaded, SelectMapStyle, ToggleRoutingGraph } from '@/actions/Actions'
 
 const osApiKey = 'mapsgraph-bf48cc0b'
 const mapTilerKey = '?key=wYonyRi2hNgJVH2qgs81'
@@ -12,6 +12,7 @@ const osmAttribution =
 export interface MapOptionsStoreState {
     styleOptions: StyleOption[]
     selectedStyle: StyleOption
+    routingGraphEnabled: boolean
     isMapLoaded: boolean
 }
 
@@ -196,6 +197,7 @@ export default class MapOptionsStore extends Store<MapOptionsStoreState> {
                         osmAttribution + ', <a href="https://www.alberding.eu/">&copy; Alberding GmbH, CC-BY-SA</a>',
                 },*/
             ],
+            routingGraphEnabled: false,
             isMapLoaded: false,
         }
     }
@@ -205,6 +207,11 @@ export default class MapOptionsStore extends Store<MapOptionsStoreState> {
             return {
                 ...state,
                 selectedStyle: action.styleOption,
+            }
+        } else if (action instanceof ToggleRoutingGraph) {
+            return {
+                ...state,
+                routingGraphEnabled: action.routingGraphEnabled,
             }
         } else if (action instanceof MapIsLoaded) {
             return {
