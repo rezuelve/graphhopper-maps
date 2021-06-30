@@ -62,7 +62,10 @@ const Options = function ({ storeState, notifyChanged }: OptionsProps) {
                         name="routing-graph"
                         defaultChecked={storeState.routingGraphEnabled}
                         disabled={false}
-                        onChange={e => Dispatcher.dispatch(new ToggleRoutingGraph(e.target.checked))}
+                        onChange={e => {
+                            notifyChanged()
+                            Dispatcher.dispatch(new ToggleRoutingGraph(e.target.checked))
+                        }}
                     />
                     <label htmlFor="routing graph">Routing Graph</label>
                 </div>
