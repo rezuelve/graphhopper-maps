@@ -5,7 +5,7 @@ import { MapLayer } from '@/layers/MapLayer'
 export default function (enabled: boolean): MapLayer {
     const [currRoad, setCurrRoad] = useState<any>(null)
     return {
-        interactiveLayerIds: ['gh-graph'],
+        interactiveLayerIds: enabled ? ['gh-graph'] : [],
         onClick: () => {},
         onHover: feature => {
             setCurrRoad(feature)
