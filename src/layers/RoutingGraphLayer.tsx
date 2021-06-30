@@ -13,7 +13,7 @@ export default function (enabled: boolean): MapLayer {
         layer: (
             <>
                 {currRoad && enabled && (
-                    <Popup longitude={currRoad.lngLat[0]} latitude={currRoad.lngLat[1]}>
+                    <Popup longitude={currRoad.lngLat[0]} latitude={currRoad.lngLat[1]} closeButton={false}>
                         <pre>{JSON.stringify(currRoad.feature.properties, null, 2)}</pre>
                     </Popup>
                 )}
