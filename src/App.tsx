@@ -121,7 +121,7 @@ function LargeScreenLayout({ query, route, viewport, mapLayers, error, mapOption
                 {
                     <MapComponent
                         viewport={viewport}
-                        mapStyle={mapOptions.selectedStyle}
+                        styleOption={mapOptions.selectedStyle}
                         queryPoints={query.queryPoints}
                         mapLayers={mapLayers}
                     />
@@ -137,6 +137,7 @@ function LargeScreenLayout({ query, route, viewport, mapLayers, error, mapOption
                             points={query.queryPoints}
                             routingProfiles={info.profiles}
                             selectedProfile={query.routingProfile}
+                            autofocus={true}
                         />
                     </div>
                     <div>{!error.isDismissed && <ErrorMessage error={error} />}</div>
@@ -166,7 +167,7 @@ function SmallScreenLayout({ query, route, viewport, mapLayers, error, mapOption
                 <MapComponent
                     viewport={viewport}
                     queryPoints={query.queryPoints}
-                    mapStyle={mapOptions.selectedStyle}
+                    styleOption={mapOptions.selectedStyle}
                     mapLayers={mapLayers}
                 />
             </div>

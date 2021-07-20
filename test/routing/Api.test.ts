@@ -1,21 +1,21 @@
 import fetchMock from 'jest-fetch-mock'
 import { ErrorAction, InfoReceived, RouteRequestFailed, RouteRequestSuccess } from '../../src/actions/Actions'
 import { setTranslation } from '../../src/translation/Translation'
-import Dispatcher, { Action } from '../../src/stores/Dispatcher'
-import { ApiImpl, ghKey } from '../../src/api/Api'
+
+import Dispatcher from '../../src/stores/Dispatcher'
+import { ApiImpl, ghApi, ghKey } from '../../src/api/Api'
 import { ApiInfo, ErrorResponse, RoutingArgs, RoutingRequest } from '../../src/api/graphhopper'
 
 beforeAll(() => {
     // replace global 'fetch' method by fetchMock
     fetchMock.enableMocks()
-    // setup translation
-    setTranslation('en', true)
 })
 
-// clear everything before each test
 beforeEach(() => {
     fetchMock.mockClear()
     jest.clearAllMocks()
+    // re-initialize translation before each test so that we can test translation setup
+    setTranslation('en', true)
 })
 
 // disable fetchMock and restore global 'fetch' method
@@ -23,7 +23,7 @@ afterAll(() => fetchMock.disableMocks())
 
 describe('info api', () => {
     it('should query correct url and dispatch an InfoReceived action', async () => {
-        const expectedUrl = 'https://graphhopper.com/api/1/info?key=' + ghKey
+        const expectedUrl = ghApi + 'info?key=' + ghKey
         const expected: ApiInfo = {
             bbox: [0, 0, 0, 0],
             import_date: 'some_date1',
@@ -81,7 +81,7 @@ describe('route', () => {
         const mockedDispatcher = jest.spyOn(Dispatcher, 'dispatch')
 
         fetchMock.mockResponse(request => {
-            expect(request.url.toString()).toEqual('https://graphhopper.com/api/1/route?key=' + ghKey)
+            expect(request.url.toString()).toEqual(ghApi + 'route?key=' + ghKey)
             expect(request.method).toEqual('POST')
             expect(request.headers.get('Accept')).toEqual('application/json')
             expect(request.headers.get('Content-Type')).toEqual('application/json')
@@ -109,7 +109,7 @@ describe('route', () => {
             elevation: true,
             debug: false,
             instructions: true,
-            locale: 'en',
+            locale: 'en_US',
             optimize: 'false',
             points_encoded: true,
             snap_preventions: ['ferry'],
@@ -142,7 +142,7 @@ describe('route', () => {
             elevation: true,
             debug: false,
             instructions: true,
-            locale: 'en',
+            locale: 'en_US',
             optimize: 'false',
             points_encoded: true,
             snap_preventions: ['ferry'],
@@ -196,7 +196,7 @@ describe('route', () => {
         }
 
         const error: ErrorResponse = {
-            message: 'message',
+            message: 'trigger error message from test',
             hints: [],
         }
 
@@ -218,6 +218,41 @@ describe('route', () => {
         }
         fetchMock.mockResponse(() => Promise.resolve({ status: 500 }))
         await expect(new ApiImpl().route(args)).rejects.toThrow('Route calculation timed out')
+    })
+
+    it('correct de locale', async () => {
+        // overwrite setTranslation call in initialization
+        setTranslation('de', true)
+        const args: RoutingArgs = {
+            points: [],
+            maxAlternativeRoutes: 1,
+            profile: 'car',
+        }
+
+        const expectedBody: RoutingRequest = {
+            points: args.points,
+            profile: args.profile,
+            elevation: true,
+            debug: false,
+            instructions: true,
+            locale: 'de_DE',
+            optimize: 'false',
+            points_encoded: true,
+            snap_preventions: ['ferry'],
+            details: ['road_class', 'road_environment', 'surface', 'max_speed', 'average_speed'],
+        }
+
+        const mockedDispatcher = jest.spyOn(Dispatcher, 'dispatch')
+
+        fetchMock.mockResponse(async request => {
+            return compareRequestBodyAndResolve(request, expectedBody)
+        })
+
+        new ApiImpl().routeWithDispatch(args)
+        await flushPromises()
+
+        expect(mockedDispatcher).toHaveBeenCalledTimes(1)
+        expect(mockedDispatcher).toHaveBeenCalledWith(new RouteRequestSuccess(args, getEmptyResult()))
     })
 })
 
