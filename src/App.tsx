@@ -71,8 +71,9 @@ export default function App() {
 
     const mapLayers: MapLayer[] = [
         // layers are stacked from bottom to top in the order of this list
-        createRoutingGraphLayer(mapOptions.routingGraphEnabled),
-        createPathsLayer(route.selectedPath, route.routingResult.paths),
+        // todo: not really because we insert just before firstSymbolLayerId twice?
+        createRoutingGraphLayer(mapOptions.routingGraphEnabled, mapOptions.firstSymbolLayerId),
+        createPathsLayer(route.selectedPath, route.routingResult.paths, mapOptions.firstSymbolLayerId),
         createQueryPointsLayer(query.queryPoints),
     ]
     if (!isSmallScreen) mapLayers.push(createPathDetailsLayer(pathDetails))
@@ -121,7 +122,7 @@ function LargeScreenLayout({ query, route, viewport, mapLayers, error, mapOption
                 {
                     <MapComponent
                         viewport={viewport}
-                        styleOption={mapOptions.selectedStyle}
+                        mapStyle={mapOptions.selectedMapStyle}
                         queryPoints={query.queryPoints}
                         mapLayers={mapLayers}
                     />
@@ -167,7 +168,7 @@ function SmallScreenLayout({ query, route, viewport, mapLayers, error, mapOption
                 <MapComponent
                     viewport={viewport}
                     queryPoints={query.queryPoints}
-                    styleOption={mapOptions.selectedStyle}
+                    mapStyle={mapOptions.selectedMapStyle}
                     mapLayers={mapLayers}
                 />
             </div>

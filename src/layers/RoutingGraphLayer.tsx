@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Layer, Popup, Source } from 'react-map-gl'
 import { MapLayer } from '@/layers/MapLayer'
 
-export default function (enabled: boolean): MapLayer {
+export default function (enabled: boolean, firstSymbolLayerId: string | undefined): MapLayer {
     const [currRoad, setCurrRoad] = useState<any>(null)
     return {
         interactiveLayerIds: enabled ? ['gh-graph'] : [],
@@ -18,6 +18,7 @@ export default function (enabled: boolean): MapLayer {
                     </Popup>
                 )}
                 {enabled && (
+                    // todo: use url from config
                     <Source type={'vector'} tiles={['http://localhost:8989/mvt/{z}/{x}/{y}.mvt?details=road_class']}>
                         <Layer
                             id="gh-graph"
@@ -43,6 +44,7 @@ export default function (enabled: boolean): MapLayer {
                                 'line-join': 'round',
                                 'line-cap': 'round',
                             }}
+                            beforeId={firstSymbolLayerId}
                         />
                     </Source>
                 )}
