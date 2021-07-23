@@ -5,6 +5,7 @@ import Dispatcher from '@/stores/Dispatcher'
 import { SelectMapStyle, ToggleRoutingGraph } from '@/actions/Actions'
 import PlainButton from '@/PlainButton'
 import LayerImg from './layer-group-solid.svg'
+import config from 'config'
 
 export default function (props: MapOptionsStoreState) {
     const [isOpen, setIsOpen] = useState(false)
@@ -54,19 +55,21 @@ const Options = function ({ storeState, notifyChanged }: OptionsProps) {
                         </div>
                     ))}
                 </div>
-                <div className={styles.option}>
-                    <input
-                        type="checkbox"
-                        name="routing-graph"
-                        defaultChecked={storeState.routingGraphEnabled}
-                        disabled={false}
-                        onChange={e => {
-                            notifyChanged()
-                            Dispatcher.dispatch(new ToggleRoutingGraph(e.target.checked))
-                        }}
-                    />
-                    <label htmlFor="routing graph">Routing Graph</label>
-                </div>
+                {config.graphLayerAllowed && (
+                    <div className={styles.option}>
+                        <input
+                            type="checkbox"
+                            name="routing-graph"
+                            defaultChecked={storeState.routingGraphEnabled}
+                            disabled={false}
+                            onChange={e => {
+                                notifyChanged()
+                                Dispatcher.dispatch(new ToggleRoutingGraph(e.target.checked))
+                            }}
+                        />
+                        <label htmlFor="routing graph">Routing Graph</label>
+                    </div>
+                )}
             </div>
         </>
     )

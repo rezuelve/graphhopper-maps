@@ -245,6 +245,7 @@ export default class MapOptionsStore extends Store<MapOptionsStoreState> {
                     layers: [],
                 },
             },
+            routingGraphEnabled: false,
             isMapLoaded: false,
         }
     }

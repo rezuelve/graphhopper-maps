@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Layer, Popup, Source } from 'react-map-gl'
 import { MapLayer } from '@/layers/MapLayer'
+import config from 'config'
 
 export default function (enabled: boolean, firstSymbolLayerId: string | undefined): MapLayer {
     const [currRoad, setCurrRoad] = useState<any>(null)
@@ -18,8 +19,12 @@ export default function (enabled: boolean, firstSymbolLayerId: string | undefine
                     </Popup>
                 )}
                 {enabled && (
-                    // todo: use url from config
-                    <Source type={'vector'} tiles={['http://localhost:8989/mvt/{z}/{x}/{y}.mvt?details=road_class']}>
+                    <Source
+                        type={'vector'}
+                        tiles={[
+                            `${config.api}mvt/{z}/{x}/{y}.mvt?details=road_class,surface,road_environment,max_speed,average_speed`,
+                        ]}
+                    >
                         <Layer
                             id="gh-graph"
                             type="line"

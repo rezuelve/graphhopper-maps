@@ -7,7 +7,7 @@ module.exports = {
     // the tile layer used by default, see MapOptionsStore.ts for all options
     defaultTiles: 'OpenStreetMap',
     // if true there will be an option to enable the GraphHopper graph in the layers menu
-    graphLayerEnabled: false,
+    graphLayerAllowed: false,
     // various api keys used for the GH backend and the different tile providers
     keys: {
         graphhopper: "missing_api_key",
