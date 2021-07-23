@@ -22,7 +22,7 @@ export default function (enabled: boolean, firstSymbolLayerId: string | undefine
                     <Source
                         type={'vector'}
                         tiles={[
-                            `${config.api}mvt/{z}/{x}/{y}.mvt?details=road_class,surface,road_environment,max_speed,average_speed`,
+                            `${config.api}mvt/{z}/{x}/{y}.mvt?details=road_class&details=surface&details=road_environment&details=max_speed&details=average_speed`,
                         ]}
                     >
                         <Layer
