@@ -28,11 +28,13 @@ export default function ({ map, queryPoints }: ContextMenuProps) {
             // the map container instead
             // https://github.com/openlayers/openlayers/issues/12512#issuecomment-879403189
             map.getTargetElement().addEventListener('contextmenu', e => {
-                e.preventDefault()
+                // e.preventDefault()
+                console.log('on context menu start')
                 const coordinate = map.getEventCoordinate(e)
                 const lonLat = toLonLat(coordinate)
                 setMenuCoordinate({ lng: lonLat[0], lat: lonLat[1] })
                 overlay.setPosition(coordinate)
+                console.log('on context menu finish')
             })
         })
     }, [map])
