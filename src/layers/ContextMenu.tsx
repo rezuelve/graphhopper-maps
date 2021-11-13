@@ -45,8 +45,8 @@ export default function ({ map, queryPoints }: ContextMenuProps) {
                     coordinate={menuCoordinate!}
                     queryPoints={queryPoints}
                     onSelect={() => {
-                        overlay?.setPosition(undefined)
-                        setMenuCoordinate(null)
+                        // overlay?.setPosition(undefined)
+                        // setMenuCoordinate(null)
                     }}
                 />
             )}
