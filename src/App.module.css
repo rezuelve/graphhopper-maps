@@ -9,7 +9,6 @@
     justify-content: space-between;
     overflow: auto;
     -webkit-user-select: none;
-    -webkit-touch-callout: none;
 }
 
 .map {
