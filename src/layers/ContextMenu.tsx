@@ -29,11 +29,7 @@ export default function ({ map, queryPoints }: ContextMenuProps) {
             // https://github.com/openlayers/openlayers/issues/12512#issuecomment-879403189
             map.getTargetElement().addEventListener('touchstart', e => {
                 e.preventDefault()
-                const coordinate = [
-                    1232776.3921833225,
-                    6613943.183459729
-                ]
-                console.log(coordinate)
+                const coordinate = map.getEventCoordinate(e as any)
                 const lonLat = toLonLat(coordinate)
                 setMenuCoordinate({ lng: lonLat[0], lat: lonLat[1] })
                 overlay.setPosition(coordinate)
