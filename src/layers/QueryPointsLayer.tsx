@@ -15,7 +15,7 @@ interface QueryPointsLayerProps {
     queryPoints: QueryPoint[]
 }
 
-export default function ({ map, queryPoints }: QueryPointsLayerProps) {
+export default function QueryPointsLayer({ map, queryPoints }: QueryPointsLayerProps) {
     map.getLayers()
         .getArray()
         .filter(l => l.get('gh:query_points'))
@@ -31,7 +31,7 @@ export default function ({ map, queryPoints }: QueryPointsLayerProps) {
                 geometry: new Point(fromLonLat([indexPoint.point.coordinate.lng, indexPoint.point.coordinate.lat])),
             })
             feature.set('gh:query_point', indexPoint.point)
-            // todo: use svg markers, set style, make draggable
+            // todo: use svg markers, setStyle()
             return feature
         })
     const queryPointsLayer = new VectorLayer({
