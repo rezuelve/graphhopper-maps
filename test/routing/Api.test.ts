@@ -25,7 +25,7 @@ describe('info api', () => {
     it('should query correct url and dispatch an InfoReceived action', async () => {
         const ghApi = 'https://some.api/'
         const ghKey = 'some-key'
-        const expectedUrl = ghApi + 'info?key=' + ghKey
+        const expectedUrl = ghApi
         const expected: ApiInfo = {
             bbox: [0, 0, 0, 0],
             import_date: 'some_date1',
@@ -85,7 +85,7 @@ describe('route', () => {
         const ghKey = 'key'
 
         fetchMock.mockResponse(request => {
-            expect(request.url.toString()).toEqual(ghApi + 'route?key=' + ghKey)
+            expect(request.url.toString()).toEqual(ghApi  )
             expect(request.method).toEqual('POST')
             expect(request.headers.get('Accept')).toEqual('application/json')
             expect(request.headers.get('Content-Type')).toEqual('application/json')

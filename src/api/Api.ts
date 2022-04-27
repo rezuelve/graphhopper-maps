@@ -140,7 +140,6 @@ export class ApiImpl implements Api {
 
     private getURLWithKey(endpoint: string) {
         const url = new URL(this.apiAddress + endpoint)
-        url.searchParams.append('key', this.apiKey)
         return url
     }
 
@@ -155,7 +154,7 @@ export class ApiImpl implements Api {
             optimize: 'false',
             points_encoded: true,
             snap_preventions: ['ferry'],
-            details: ['road_class', 'road_environment', 'surface', 'max_speed', 'average_speed'],
+            details: ['road_class', 'road_environment', 'max_speed', 'average_speed'],
             ...(config.extraProfiles ? (config.extraProfiles as any)[args.profile] : {}),
         }
 
