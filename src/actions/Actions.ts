@@ -158,3 +158,11 @@ export class PathDetailsElevationSelected implements Action {
         this.segments = segments
     }
 }
+
+export class SetMarkers implements Action {
+    readonly coordinates: Coordinate[]
+
+    constructor(coordinates: Coordinate[]) {
+        this.coordinates = coordinates
+    }
+}

@@ -1,7 +1,7 @@
 import { coordinateToText } from '@/Converters'
 import { Bbox, RoutingProfile } from '@/api/graphhopper'
 import Dispatcher from '@/stores/Dispatcher'
-import { ClearPoints, SelectMapStyle, SetInitialBBox, SetRoutingParametersAtOnce } from '@/actions/Actions'
+import { ClearPoints, SelectMapStyle, SetInitialBBox, SetRoutingParametersAtOnce, SetMarkers } from '@/actions/Actions'
 // import the window like this so that it can be mocked during testing
 import { window } from '@/Window'
 import QueryStore, { Coordinate, QueryPoint, QueryPointType, QueryStoreState } from '@/stores/QueryStore'
@@ -38,13 +38,14 @@ export default class NavBar {
         return coordinate === point.queryText ? coordinate : coordinate + '_' + point.queryText
     }
 
-    private parseUrl(href: string): { points: QueryPoint[]; profile: RoutingProfile; styleOption: StyleOption } {
+    private parseUrl(href: string): { points: QueryPoint[]; profile: RoutingProfile; styleOption: StyleOption; markers: Coordinate[] } {
         const url = new URL(href)
 
         return {
             points: NavBar.parsePoints(url),
             profile: { name: NavBar.parseProfile(url) },
             styleOption: this.parseLayer(url),
+            markers: NavBar.parseMarkers(url),
         }
     }
 
@@ -66,6 +67,12 @@ export default class NavBar {
                 color: '',
                 type: QueryPointType.Via,
             }
+        })
+    }
+
+    private static parseMarkers(url: URL): Coordinate[] {
+        return url.searchParams.getAll('marker').map((parameter) => {
+            return this.parseCoordinate(parameter)
         })
     }
 
@@ -116,6 +123,9 @@ export default class NavBar {
 
         // add map style
         Dispatcher.dispatch(new SelectMapStyle(parseResult.styleOption))
+
+        // set markers from URL
+        Dispatcher.dispatch(new SetMarkers(parseResult.markers))
 
         this.isIgnoreQueryStoreUpdates = false
     }

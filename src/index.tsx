@@ -10,6 +10,7 @@ import {
     getPathDetailsStore,
     getQueryStore,
     getRouteStore,
+    getMarkersStore,
     setStores,
 } from '@/stores/Stores'
 import Dispatcher from '@/stores/Dispatcher'
@@ -19,6 +20,7 @@ import QueryStore from '@/stores/QueryStore'
 import ErrorStore from '@/stores/ErrorStore'
 import MapOptionsStore from '@/stores/MapOptionsStore'
 import PathDetailsStore from '@/stores/PathDetailsStore'
+import MarkersStore from '@/stores/MarkersStore'
 import NavBar from '@/NavBar'
 import * as config from 'config'
 import { getApi, setApi } from '@/api/Api'
@@ -40,6 +42,7 @@ setStores({
     errorStore: new ErrorStore(),
     mapOptionsStore: new MapOptionsStore(),
     pathDetailsStore: new PathDetailsStore(),
+    markersStore: new MarkersStore(),
 })
 
 setMap(createMap())
@@ -51,6 +54,7 @@ Dispatcher.register(getApiInfoStore())
 Dispatcher.register(getErrorStore())
 Dispatcher.register(getMapOptionsStore())
 Dispatcher.register(getPathDetailsStore())
+Dispatcher.register(getMarkersStore())
 
 // register map action receiver
 const smallScreenMediaQuery = window.matchMedia('(max-width: 44rem)')

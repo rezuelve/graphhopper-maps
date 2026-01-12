@@ -8,6 +8,7 @@ import {
     getPathDetailsStore,
     getQueryStore,
     getRouteStore,
+    getMarkersStore,
 } from '@/stores/Stores'
 import MapComponent from '@/map/MapComponent'
 import { ApiInfo } from '@/api/graphhopper'
@@ -25,6 +26,7 @@ import ErrorMessage from '@/sidebar/ErrorMessage'
 import useBackgroundLayer from '@/layers/UseBackgroundLayer'
 import useQueryPointsLayer from '@/layers/UseQueryPointsLayer'
 import usePathsLayer from '@/layers/UsePathsLayer'
+import useMarkersLayer from '@/layers/UseMarkersLayer'
 import ContextMenu from '@/layers/ContextMenu'
 import usePathDetailsLayer from '@/layers/UsePathDetailsLayer'
 import PathDetailPopup from '@/layers/PathDetailPopup'
@@ -41,6 +43,7 @@ export default function App() {
     const [error, setError] = useState(getErrorStore().state)
     const [mapOptions, setMapOptions] = useState(getMapOptionsStore().state)
     const [pathDetails, setPathDetails] = useState(getPathDetailsStore().state)
+    const [markers, setMarkers] = useState(getMarkersStore().state)
 
     const map = getMap()
 
@@ -51,6 +54,7 @@ export default function App() {
         const onErrorChanged = () => setError(getErrorStore().state)
         const onMapOptionsChanged = () => setMapOptions(getMapOptionsStore().state)
         const onPathDetailsChanged = () => setPathDetails(getPathDetailsStore().state)
+        const onMarkersChanged = () => setMarkers(getMarkersStore().state)
 
         getQueryStore().register(onQueryChanged)
         getApiInfoStore().register(onInfoChanged)
@@ -58,6 +62,7 @@ export default function App() {
         getErrorStore().register(onErrorChanged)
         getMapOptionsStore().register(onMapOptionsChanged)
         getPathDetailsStore().register(onPathDetailsChanged)
+        getMarkersStore().register(onMarkersChanged)
 
         return () => {
             getQueryStore().deregister(onQueryChanged)
@@ -66,6 +71,7 @@ export default function App() {
             getErrorStore().deregister(onErrorChanged)
             getMapOptionsStore().deregister(onMapOptionsChanged)
             getPathDetailsStore().deregister(onPathDetailsChanged)
+            getMarkersStore().deregister(onMarkersChanged)
         }
     })
 
@@ -73,6 +79,7 @@ export default function App() {
     useBackgroundLayer(map, mapOptions.selectedStyle)
     usePathsLayer(map, route.routingResult.paths, route.selectedPath)
     useQueryPointsLayer(map, query.queryPoints)
+    useMarkersLayer(map, markers.markers)
     usePathDetailsLayer(map, pathDetails)
 
     const isSmallScreen = useMediaQuery({ query: '(max-width: 44rem)' })
