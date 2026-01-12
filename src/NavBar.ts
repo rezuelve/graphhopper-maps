@@ -110,9 +110,13 @@ export default class NavBar {
         Dispatcher.dispatch(new ClearPoints())
         const parseResult = this.parseUrl(window.location.href)
 
-        // estimate map bounds from url points if there are any. this way we prevent loading tiles for the world view
+        // estimate map bounds from url points and markers if there are any. this way we prevent loading tiles for the world view
         // only to zoom to the route shortly after
-        const bbox = this.getBBoxFromUrlPoints(parseResult.points.map(p => p.coordinate))
+        const allCoordinates = [
+            ...parseResult.points.map(p => p.coordinate),
+            ...parseResult.markers
+        ]
+        const bbox = this.getBBoxFromUrlPoints(allCoordinates)
         if (bbox) Dispatcher.dispatch(new SetInitialBBox(bbox))
 
         // we want either all the points replaced from the url or we just have one and we want to replace the one default
