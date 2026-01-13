@@ -8,7 +8,7 @@ import { fromLonLat } from 'ol/proj'
 import { Icon, Style } from 'ol/style'
 import pinIcon from '@/assets/pin.png'
 
-const MARKER_SIZE = 5 // Size for the custom pin icon
+const MARKER_SIZE = 60 // Size for the custom pin icon
 
 export default function useMarkersLayer(map: Map, markers: Marker[]) {
     useEffect(() => {
