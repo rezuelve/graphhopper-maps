@@ -8,6 +8,7 @@ import { coordinateToText } from '@/Converters'
 // import the window and mock it with jest
 import { window } from '@/Window'
 import MapOptionsStore, { StyleOption } from '@/stores/MapOptionsStore'
+import MarkersStore from '@/stores/MarkersStore'
 import * as config from 'config'
 import { RoutingProfile } from '@/api/graphhopper'
 
@@ -27,6 +28,7 @@ jest.mock('@/Window', () => ({
 describe('NavBar', function () {
     let queryStore: QueryStore
     let mapStore: MapOptionsStore
+    let markersStore: MarkersStore
     let navBar: NavBar
     let callbacks: { (type: string): void }[]
 
@@ -37,11 +39,14 @@ describe('NavBar', function () {
         window.addEventListener = jest.fn((type: any, listener: any) => {
             callbacks.push(listener)
         })
+        console.log('beforeEach')
         queryStore = new QueryStore(new DummyApi())
         mapStore = new MapOptionsStore()
-        navBar = new NavBar(queryStore, mapStore)
+        markersStore = new MarkersStore()
+        navBar = new NavBar(queryStore, mapStore, markersStore)
         Dispatcher.register(queryStore)
         Dispatcher.register(mapStore)
+        Dispatcher.register(markersStore)
     })
 
     afterEach(() => {

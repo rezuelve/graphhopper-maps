@@ -6,21 +6,25 @@ import { ClearPoints, SelectMapStyle, SetInitialBBox, SetRoutingParametersAtOnce
 import { window } from '@/Window'
 import QueryStore, { Coordinate, QueryPoint, QueryPointType, QueryStoreState } from '@/stores/QueryStore'
 import MapOptionsStore, { MapOptionsStoreState, StyleOption } from './stores/MapOptionsStore'
+import MarkersStore, { Marker, MarkersStoreState } from '@/stores/MarkersStore'
 
 export default class NavBar {
     private readonly queryStore: QueryStore
     private readonly mapStore: MapOptionsStore
+    private readonly markersStore: MarkersStore
     private isIgnoreQueryStoreUpdates = false
 
-    constructor(queryStore: QueryStore, mapStore: MapOptionsStore) {
+    constructor(queryStore: QueryStore, mapStore: MapOptionsStore, markersStore: MarkersStore) {
         this.queryStore = queryStore
         this.queryStore.register(() => this.onQueryStateChanged())
         this.mapStore = mapStore
         this.mapStore.register(() => this.onQueryStateChanged())
+        this.markersStore = markersStore
+        this.markersStore.register(() => this.onQueryStateChanged())
         window.addEventListener('popstate', () => this.parseUrlAndReplaceQuery())
     }
 
-    private static createUrl(baseUrl: string, queryStoreState: QueryStoreState, mapState: MapOptionsStoreState) {
+    private static createUrl(baseUrl: string, queryStoreState: QueryStoreState, mapState: MapOptionsStoreState, markersState: MarkersStoreState) {
         const result = new URL(baseUrl)
         queryStoreState.queryPoints
             .filter(point => point.isInitialized)
@@ -30,7 +34,18 @@ export default class NavBar {
         result.searchParams.append('profile', queryStoreState.routingProfile.name)
         result.searchParams.append('layer', mapState.selectedStyle.name)
 
+        // Add markers to URL
+        markersState.markers.forEach(marker => {
+            const markerParam = this.markerToParam(marker)
+            result.searchParams.append('marker', markerParam)
+        })
+
         return result
+    }
+
+    private static markerToParam(marker: Marker): string {
+        const coordinate = coordinateToText(marker.coordinate)
+        return marker.label ? `${coordinate},${marker.label}` : coordinate
     }
 
     private static pointToParam(point: QueryPoint) {
@@ -38,7 +53,7 @@ export default class NavBar {
         return coordinate === point.queryText ? coordinate : coordinate + '_' + point.queryText
     }
 
-    private parseUrl(href: string): { points: QueryPoint[]; profile: RoutingProfile; styleOption: StyleOption; markers: Coordinate[] } {
+    private parseUrl(href: string): { points: QueryPoint[]; profile: RoutingProfile; styleOption: StyleOption; markers: Marker[] } {
         const url = new URL(href)
 
         return {
@@ -70,10 +85,24 @@ export default class NavBar {
         })
     }
 
-    private static parseMarkers(url: URL): Coordinate[] {
-        return url.searchParams.getAll('marker').map((parameter) => {
-            return this.parseCoordinate(parameter)
+    private static parseMarkers(url: URL): Marker[] {
+        return url.searchParams.getAll('marker').map((parameter, index) => {
+            return this.parseMarkerWithLabel(parameter, index)
         })
+    }
+
+    private static parseMarkerWithLabel(params: string, id: number): Marker {
+        const parts = params.split(',')
+        if (parts.length < 2) throw Error('Could not parse marker with value: "' + params + '"')
+        
+        return {
+            coordinate: {
+                lat: NavBar.parseNumber(parts[0]),
+                lng: NavBar.parseNumber(parts[1]),
+            },
+            id: id,
+            label: parts.length >= 3 ? parts.slice(2).join(',') : undefined,
+        }
     }
 
     private static parseCoordinate(params: string) {
@@ -114,7 +143,7 @@ export default class NavBar {
         // only to zoom to the route shortly after
         const allCoordinates = [
             ...parseResult.points.map(p => p.coordinate),
-            ...parseResult.markers
+            ...parseResult.markers.map(m => m.coordinate)
         ]
         const bbox = this.getBBoxFromUrlPoints(allCoordinates)
         if (bbox) Dispatcher.dispatch(new SetInitialBBox(bbox))
@@ -151,7 +180,8 @@ export default class NavBar {
         const newHref = NavBar.createUrl(
             window.location.origin + window.location.pathname,
             this.queryStore.state,
-            this.mapStore.state
+            this.mapStore.state,
+            this.markersStore.state
         ).toString()
 
         if (newHref !== window.location.href) window.history.pushState('last state', '', newHref)

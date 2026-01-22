@@ -6,6 +6,7 @@ import { Coordinate } from '@/stores/QueryStore'
 export interface Marker {
     readonly coordinate: Coordinate
     readonly id: number
+    readonly label?: string
 }
 
 export interface MarkersStoreState {
@@ -25,13 +26,9 @@ export default class MarkersStore extends Store<MarkersStoreState> {
 
     reduce(state: MarkersStoreState, action: Action): MarkersStoreState {
         if (action instanceof SetMarkers) {
-            const markers = action.coordinates.map((coord, index) => ({
-                coordinate: coord,
-                id: index,
-            }))
             return {
                 ...state,
-                markers,
+                markers: action.markers,
             }
         }
         return state

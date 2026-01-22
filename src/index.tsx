@@ -64,7 +64,7 @@ Dispatcher.register(mapActionReceiver)
 getApi().infoWithDispatch() // get infos about the api as soon as possible
 
 // hook up the navbar to the query store and vice versa
-const navBar = new NavBar(getQueryStore(), getMapOptionsStore())
+const navBar = new NavBar(getQueryStore(), getMapOptionsStore(), getMarkersStore())
 // parse the initial url
 navBar.parseUrlAndReplaceQuery()
 

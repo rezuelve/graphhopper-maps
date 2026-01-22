@@ -3,6 +3,7 @@ import { Coordinate, QueryPoint } from '@/stores/QueryStore'
 import { ApiInfo, Bbox, Path, RoutingArgs, RoutingProfile, RoutingResult } from '@/api/graphhopper'
 import { StyleOption } from '@/stores/MapOptionsStore'
 import { PathDetailsPoint } from '@/stores/PathDetailsStore'
+import { Marker } from '@/stores/MarkersStore'
 
 export class InfoReceived implements Action {
     readonly result: ApiInfo
@@ -160,9 +161,9 @@ export class PathDetailsElevationSelected implements Action {
 }
 
 export class SetMarkers implements Action {
-    readonly coordinates: Coordinate[]
+    readonly markers: Marker[]
 
-    constructor(coordinates: Coordinate[]) {
-        this.coordinates = coordinates
+    constructor(markers: Marker[]) {
+        this.markers = markers
     }
 }
